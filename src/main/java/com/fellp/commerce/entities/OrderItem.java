@@ -3,6 +3,8 @@ package com.fellp.commerce.entities;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 
+import java.util.Objects;
+
 @Entity
 public class OrderItem {
 
@@ -18,6 +20,20 @@ public class OrderItem {
         id.setProduct(product);
         this.quantity = quantity;
         this.price = price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderItem orderItem = (OrderItem) o;
+        return Objects.equals(id, orderItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public Order getOrder() {
