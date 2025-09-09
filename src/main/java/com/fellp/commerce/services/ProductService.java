@@ -16,11 +16,11 @@ import java.util.Optional;
 public class ProductService {
 
     @Autowired
-    private ProductReposiry productReposiry;
+    private ProductReposiry productRepository;
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        Optional<Product> result = productReposiry.findById(id);
+        Optional<Product> result = productRepository.findById(id);
         Product product = result.get();
 
         return new ProductDTO(product);
@@ -28,7 +28,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(Pageable pageable) {
-        Page<Product> result = productReposiry.findAll(pageable);
+        Page<Product> result = productRepository.findAll(pageable);
         return result.map(x -> new ProductDTO(x));
     }
 
@@ -37,7 +37,7 @@ public class ProductService {
 
         Product entity = new Product();
         copyDtoToEntity(dto, entity);
-        entity = productReposiry.save(entity);
+        entity = productRepository.save(entity);
 
         return new ProductDTO(entity);
     }
@@ -45,11 +45,16 @@ public class ProductService {
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
 
-        Product entity = productReposiry.getReferenceById(id);
+        Product entity = productRepository.getReferenceById(id);
         copyDtoToEntity(dto, entity);
-        entity = productReposiry.save(entity);
+        entity = productRepository.save(entity);
 
         return new ProductDTO(entity);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        productRepository.deleteById(id);
     }
 
     private void copyDtoToEntity(ProductDTO dto, Product entity) {
